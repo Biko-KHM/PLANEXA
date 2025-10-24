@@ -137,7 +137,7 @@ planexa/
 
 ## 🧑‍💻 **Contributing**
 
-We ❤️ contributions!  
+ Contributions ❤️ are appreciated!  
 If you’d like to improve **PLANEXA**, please follow these steps:
 
 ```bash
