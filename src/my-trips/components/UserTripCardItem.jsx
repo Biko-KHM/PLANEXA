@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 function UserTripCardItem({ trip }) {
   const [photoUrl, setPhotoUrl] = useState();
+
   useEffect(() => {
     trip && GetPlacePhoto();
   }, [trip]);
@@ -13,8 +14,6 @@ function UserTripCardItem({ trip }) {
       textQuery: trip?.userSelection?.location?.label,
     };
     const result = await GetPlaceDetails(data).then((resp) => {
-      console.log(resp.data.places[0].photos[3].name);
-
       const PhotoUrl = PHOTO_REF_URL.replace(
         "{NAME}",
         resp.data.places[0].photos[3].name
@@ -22,21 +21,35 @@ function UserTripCardItem({ trip }) {
       setPhotoUrl(PhotoUrl);
     });
   };
+
   return (
     <Link to={"/view-trip/" + trip?.id}>
-      <div className="hover:scale-105 transition-all ">
-        <img
-          src={photoUrl ? photoUrl : "/placeholder.jpg"}
-          className="object-cover rounded-xl h-[220px]"
-        />
-        <div>
-          <h2 className="font-bold text-lg">
+      <div className="bg-white/5 backdrop-blur-md rounded-xl p-3 border border-white/10 
+                      hover:scale-[1.03] hover:shadow-xl hover:shadow-black/20 
+                      transition-all duration-300 cursor-pointer">
+
+        {/* Image */}
+        <div className="overflow-hidden rounded-lg">
+          <img
+            src={photoUrl || "/placeholder.jpg"}
+            className="object-cover w-full h-[220px] rounded-lg 
+                       hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+
+        {/* Text */}
+        <div className="mt-3 space-y-1">
+          <h2 className="font-bold text-xl text-white tracking-tight">
             {trip?.userSelection?.location?.label}
           </h2>
-          <h2 className="text-sm text-gray-500">
-            {trip?.userSelection.noOfDays} Days trip with{" "}
-            {trip?.userSelection?.budget} Budget
-          </h2>
+
+          <p className="text-sm text-gray-300">
+            {trip?.userSelection.noOfDays} Days trip •{" "}
+            <span className="text-emerald-400 font-semibold">
+              {trip?.userSelection?.budget}
+            </span>{" "}
+            Budget
+          </p>
         </div>
       </div>
     </Link>
