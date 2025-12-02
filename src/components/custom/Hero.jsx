@@ -33,7 +33,7 @@ function Hero() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 1 }}
       >
-        Your personal travel curator — building seamless, smart, and stunning
+        Your personal travel planner — building seamless, smart, and stunning
         journeys tailored to your dreams and budget.
       </motion.p>
 
