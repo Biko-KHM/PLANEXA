@@ -63,7 +63,7 @@ function CreateTrip() {
       !formData?.budget ||
       !formData?.traveler
     ) {
-      toast("Please fill all details");
+      toast("Please fill the details");
       return;
     }
     setLoading(true);
@@ -122,14 +122,14 @@ function CreateTrip() {
         Tell us your travel preferences 🏕️🌴
       </h2>
       <p className="mt-3 text-gray-500 text-xl">
-        Just provide some basic information, and our trip planner will generate
+        provide some basic information, and our trip planner will generate
         a customized itinerary based on your preferences.
       </p>
 
       <div className="mt-20 flex flex-col gap-10">
         <div>
           <h2 className="text-xl my-3 font-medium">
-            What is destination of choice?
+            What is destination of your choice?
           </h2>
           <GooglePlacesAutocomplete
             apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
