@@ -129,7 +129,7 @@ function CreateTrip() {
       <div className="mt-20 flex flex-col gap-10">
         <div>
           <h2 className="text-xl my-3 font-medium">
-            What is destination of your choice?
+            What is your destination?
           </h2>
           <GooglePlacesAutocomplete
             apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
