@@ -6,8 +6,7 @@ import {
   SelectTravelesList,
 } from "@/constants/options";
 import { chatSession } from "@/service/AIModal";
-import React, { useEffect, useState } from "react";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import React, { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import {
@@ -25,15 +24,20 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/service/firebaseConfig";
 import { useNavigate } from "react-router-dom";
 
+// NEW IMPORTS (Google Maps Autocomplete)
+import { LoadScript, Autocomplete } from "@react-google-maps/api";
+
 function CreateTrip() {
   const [place, setPlace] = useState();
-
   const [formData, setFormData] = useState([]);
   const [openDailog, setOpenDailog] = useState(false);
-
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  // Autocomplete reference
+  const autoCompleteRef = useRef(null);
+
   const handleInputChange = (name, value) => {
     setFormData({
       ...formData,
@@ -76,6 +80,7 @@ function CreateTrip() {
       .replace("{traveler}", formData?.traveler)
       .replace("{budget}", formData?.budget)
       .replace("{totalDays}", formData?.noOfDays);
+
     const result = await chatSession.sendMessage(FINAL_PROMPT);
 
     console.log("--", result?.response?.text());
@@ -116,6 +121,7 @@ function CreateTrip() {
         OnGenerateTrip();
       });
   };
+
   return (
     <div className="sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10">
       <h2 className="font-bold text-3xl">
@@ -131,16 +137,32 @@ function CreateTrip() {
           <h2 className="text-xl my-3 font-medium">
             What is your destination?
           </h2>
-          <GooglePlacesAutocomplete
-            apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
-            selectProps={{
-              place,
-              onChange: (v) => {
-                setPlace(v);
-                handleInputChange("location", v);
-              },
-            }}
-          />
+
+          {/* NEW GOOGLE AUTOCOMPLETE */}
+          <LoadScript
+            googleMapsApiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
+            libraries={["places"]}
+          >
+            <Autocomplete
+              onLoad={(ref) => (autoCompleteRef.current = ref)}
+              onPlaceChanged={() => {
+                const placeObj = autoCompleteRef.current.getPlace();
+
+                const payload = {
+                  label: placeObj.formatted_address,
+                  value: {
+                    lat: placeObj.geometry.location.lat(),
+                    lng: placeObj.geometry.location.lng(),
+                  },
+                };
+
+                setPlace(payload);
+                handleInputChange("location", payload);
+              }}
+            >
+              <Input placeholder="Search destination..." />
+            </Autocomplete>
+          </LoadScript>
         </div>
 
         <div>
